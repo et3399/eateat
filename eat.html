@@ -168,17 +168,9 @@
 
             console.log('收集到的數據:', data);
 
-            // --- 此處為統計結果的關鍵說明 ---
-            // 因為這是靜態 HTML，無法直接存入資料庫。
-            // 方案 A: 串接 Google 表單 (推薦)
-            // 你可以建立一個 Google 表單，取得 entry ID 後在此 fetch 出去。
-            
-            // 這裡我們先模擬成功畫面
+            // 模擬成功畫面
             form.classList.add('hidden');
             resultSection.classList.remove('hidden');
-
-            // 如果你想看「目前」的統計，你可以把這個 data 存到 localStorage，
-            // 但這只有在同一台電腦看得到。真正的統計需要後台。
         };
     </script>
 </body>

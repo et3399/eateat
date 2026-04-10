@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>聚餐糾察隊</title>
+    <title>聚餐糾察隊 - 數據採集終端</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
@@ -77,13 +77,13 @@
             border: 2px solid rgba(48, 54, 61, 1);
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            font-size: 1.25rem;
+            font-size: 1rem;
         }
 
         .option-box:hover {
             border-color: var(--accent-primary);
             background: rgba(0, 242, 255, 0.08);
-            transform: scale(1.02);
+            transform: translateY(-2px);
         }
 
         input:checked + .option-box {
@@ -93,15 +93,14 @@
             color: var(--accent-primary);
         }
 
-        .tech-input {
+        .tech-select {
             background: #010409;
             border: 2px solid #30363d;
             color: #f0f6fc;
-            font-size: 1.25rem;
             transition: all 0.3s;
         }
 
-        .tech-input:focus {
+        .tech-select:focus {
             border-color: var(--accent-primary);
             outline: none;
             box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
@@ -111,12 +110,12 @@
             background: transparent;
             border: 2px solid var(--accent-primary);
             color: var(--accent-primary);
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 900;
             position: relative;
             overflow: hidden;
             transition: all 0.4s;
-            letter-spacing: 0.3em;
+            letter-spacing: 0.2em;
         }
 
         .btn-glow:hover {
@@ -145,50 +144,55 @@
 
     <div class="bg-grid"></div>
 
-    <div id="surveyPage" class="tech-card w-full max-w-2xl p-10 m-6 relative overflow-hidden fade-in">
-        <div class="absolute top-0 right-0 p-3 opacity-30 font-mono text-xs">系統狀態：待命</div>
+    <div id="surveyPage" class="tech-card w-full max-w-xl p-8 m-4 relative overflow-hidden fade-in">
+        <div class="absolute top-0 right-0 p-3 opacity-30 font-mono text-[10px]">AUTH_MODE: ANONYMOUS</div>
         
-        <div class="text-center mb-14">
-            <div class="flex justify-center mb-6">
-                <div class="w-20 h-20 rounded-full border-2 border-cyan-400 flex items-center justify-center animate-pulse">
-                    <span class="text-5xl text-cyan-400">⚡</span>
+        <div class="text-center mb-10">
+            <div class="flex justify-center mb-4">
+                <div class="w-16 h-16 rounded-full border-2 border-cyan-400 flex items-center justify-center animate-pulse">
+                    <span class="text-4xl text-cyan-400">🍴</span>
                 </div>
             </div>
             <div class="inline-block">
-                <h1 class="text-4xl font-black tracking-widest text-white typing mb-4">聚餐偏好掃描系統</h1>
+                <h1 class="text-2xl font-black tracking-widest text-white typing mb-2">聚餐數據採集終端</h1>
             </div>
-            <p class="text-cyan-600 text-lg font-bold tracking-widest uppercase">數據採集協議已啟動</p>
+            <p class="text-cyan-600 text-xs font-bold tracking-widest uppercase">Protocol version 2.5 // No Complaining Allowed</p>
         </div>
 
-        <form id="surveyForm" class="space-y-12">
+        <form id="surveyForm" class="space-y-8">
+            <!-- 1. 預算 -->
             <div>
-                <label class="text-lg font-black text-cyan-400 uppercase tracking-widest mb-6 block border-l-4 border-cyan-400 pl-3">第 01 階段：預算權限分析</label>
-                <div class="grid grid-cols-2 gap-4">
-                    <label><input type="radio" name="budget" value="300" class="hidden-input" required><div class="option-box p-6 rounded-lg text-center font-bold">低階門檻 ($300-)</div></label>
-                    <label><input type="radio" name="budget" value="600" class="hidden-input"><div class="option-box p-6 rounded-lg text-center font-bold">標準協議 ($600)</div></label>
-                    <label><input type="radio" name="budget" value="1200" class="hidden-input"><div class="option-box p-6 rounded-lg text-center font-bold">高級核心 ($1200)</div></label>
-                    <label><input type="radio" name="budget" value="unlimited" class="hidden-input"><div class="option-box p-6 rounded-lg text-center font-bold">無界限模式 (無限)</div></label>
+                <label class="text-sm font-black text-cyan-400 uppercase tracking-widest mb-4 block border-l-4 border-cyan-400 pl-3">Phase 01: 預算權限分析</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label><input type="radio" name="budget" value="300" class="hidden-input" required><div class="option-box p-4 rounded-lg text-center font-bold">小資 ($300-)</div></label>
+                    <label><input type="radio" name="budget" value="600" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">一般 ($600)</div></label>
+                    <label><input type="radio" name="budget" value="1000" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">質感 ($1000)</div></label>
+                    <label><input type="radio" name="budget" value="unlimited" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">無上限 (!!?)</div></label>
                 </div>
             </div>
 
+            <!-- 2. 避雷針 -->
             <div>
-                <label class="text-lg font-black text-cyan-400 uppercase tracking-widest mb-6 block border-l-4 border-cyan-400 pl-3">第 02 階段：料理類型過濾</label>
-                <div class="grid grid-cols-3 gap-3">
-                    <label><input type="checkbox" name="prefer" value="hotpot" class="hidden-input"><div class="option-box py-5 rounded-lg text-center font-bold">火鍋</div></label>
-                    <label><input type="checkbox" name="prefer" value="bbq" class="hidden-input"><div class="option-box py-5 rounded-lg text-center font-bold">燒肉</div></label>
-                    <label><input type="checkbox" name="prefer" value="buffet" class="hidden-input"><div class="option-box py-5 rounded-lg text-center font-bold">自助餐</div></label>
-                    <label><input type="checkbox" name="prefer" value="thai" class="hidden-input"><div class="option-box py-5 rounded-lg text-center font-bold">泰國菜</div></label>
-                    <label><input type="checkbox" name="prefer" value="bistro" class="hidden-input"><div class="option-box py-5 rounded-lg text-center font-bold">餐酒館</div></label>
-                    <label><input type="checkbox" name="prefer" value="jp" class="hidden-input"><div class="option-box py-5 rounded-lg text-center font-bold">日韓系</div></label>
+                <label class="text-sm font-black text-cyan-400 uppercase tracking-widest mb-4 block border-l-4 border-cyan-400 pl-3">Phase 02: 衝突過濾清單 (多選)</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label><input type="checkbox" name="avoid" value="buffet" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">吃到飽</div></label>
+                    <label><input type="checkbox" name="avoid" value="vegan" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">全素食</div></label>
+                    <label><input type="checkbox" name="avoid" value="raw" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">生食海鮮</div></label>
+                    <label><input type="checkbox" name="avoid" value="spicy" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">極致辛辣</div></label>
                 </div>
             </div>
 
+            <!-- 3. 目的 -->
             <div>
-                <label class="text-lg font-black text-cyan-400 uppercase tracking-widest mb-6 block border-l-4 border-cyan-400 pl-3">第 03 階段：座標範圍查詢</label>
-                <input type="text" name="location" placeholder="輸入搜尋地區 (如：信義區)..." class="tech-input w-full p-6 rounded-lg font-bold">
+                <label class="text-sm font-black text-cyan-400 uppercase tracking-widest mb-4 block border-l-4 border-cyan-400 pl-3">Phase 03: 核心目的標籤</label>
+                <select id="purpose" class="tech-select w-full p-4 rounded-lg font-bold outline-none">
+                    <option value="eat">認真吃飯 (吃完就散)</option>
+                    <option value="talk">瘋狂聊天 (環境安靜)</option>
+                    <option value="photo">拍照打卡 (視覺優先)</option>
+                </select>
             </div>
 
-            <button type="submit" class="btn-glow w-full py-6 rounded-lg mt-8">
+            <button type="submit" class="btn-glow w-full py-5 rounded-lg mt-4 shadow-2xl transform active:scale-95 transition-all uppercase">
                 啟動數據傳輸
             </button>
         </form>
@@ -197,11 +201,21 @@
     <script>
         document.getElementById('surveyForm').onsubmit = (e) => {
             e.preventDefault();
-            // 模擬將資料儲存到 sessionStorage
-            const formData = new FormData(e.target);
-            sessionStorage.setItem('surveyData', JSON.stringify(Object.fromEntries(formData)));
             
-            // 跳轉到 upload.html
+            // 收集數據
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            
+            // 處理多選
+            data.avoid = formData.getAll('avoid');
+            data.purpose = document.getElementById('purpose').value;
+            data.timestamp = new Date().toISOString();
+
+            // 儲存至 sessionStorage
+            sessionStorage.setItem('surveyData', JSON.stringify(data));
+            
+            // 執行跳轉至 upload.html
+            console.log('數據封裝完成，開始導向...');
             window.location.href = 'upload.html';
         };
     </script>

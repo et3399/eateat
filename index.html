@@ -142,13 +142,27 @@
             width: 0; height: 0;
         }
 
-        .fade-in {
-            animation: fadeIn 0.8s forwards;
+        /* 頁面切換動畫 */
+        .page-transition {
+            display: none;
+        }
+        .page-transition.active {
+            display: block;
+            animation: fadeIn 0.6s ease-out forwards;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* 進度條動畫 */
+        .progress-bar {
+            width: 0%;
+            height: 4px;
+            background: var(--accent-secondary);
+            box-shadow: 0 0 10px var(--accent-secondary);
+            transition: width 2s ease-in-out;
         }
     </style>
 </head>
@@ -156,7 +170,8 @@
 
     <div class="bg-grid"></div>
 
-    <div id="surveyPage" class="tech-card w-full max-w-2xl p-8 m-4 relative overflow-hidden fade-in">
+    <!-- 調查頁面 -->
+    <div id="surveyPage" class="tech-card w-full max-w-2xl p-8 m-4 relative overflow-hidden page-transition active">
         <div class="absolute top-0 right-0 p-3 opacity-30 font-mono text-[10px]">AUTH_MODE: ANONYMOUS</div>
         
         <div class="text-center mb-10">
@@ -168,7 +183,7 @@
             <div class="inline-block">
                 <h1 class="text-2xl font-black tracking-widest text-white typing mb-2">聚餐數據採集終端</h1>
             </div>
-            <p class="text-cyan-600 text-xs font-bold tracking-widest uppercase">Protocol version 2.7 // Category Filter Enabled</p>
+            <p class="text-cyan-600 text-xs font-bold tracking-widest uppercase">Protocol version 2.8 // Direct Upload Protocol</p>
         </div>
 
         <form id="surveyForm" class="space-y-8">
@@ -190,56 +205,101 @@
                 </div>
             </div>
 
-            <!-- 2. 避雷針 (包含具體類別) -->
+            <!-- 2. 避雷針 -->
             <div>
                 <label class="text-sm font-black text-cyan-400 uppercase tracking-widest mb-4 block border-l-4 border-cyan-400 pl-3">Phase 02: 衝突過濾清單 (勾選你不想吃的)</label>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    <!-- 具體類別 -->
                     <label><input type="checkbox" name="avoid" value="hotpot" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">麻辣/火鍋</div></label>
                     <label><input type="checkbox" name="avoid" value="shabu" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">精緻涮涮鍋</div></label>
                     <label><input type="checkbox" name="avoid" value="jp_bbq" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">日式燒肉</div></label>
                     <label><input type="checkbox" name="avoid" value="kr_bbq" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">韓式料理/燒肉</div></label>
                     <label><input type="checkbox" name="avoid" value="buffet" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">飯店百匯吃到飽</div></label>
-                    <label><input type="checkbox" name="avoid" value="thai" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">泰式料理</div></label>
-                    <label><input type="checkbox" name="avoid" value="pasta" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">義大利麵/披薩</div></label>
                     <label><input type="checkbox" name="avoid" value="izakaya" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">居酒屋/串燒</div></label>
-                    <label><input type="checkbox" name="avoid" value="steak" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">美式/排餐</div></label>
                     
-                    <!-- 飲食禁忌 -->
                     <label><input type="checkbox" name="avoid" value="vegan" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold text-emerald-400">非素食不吃</div></label>
                     <label><input type="checkbox" name="avoid" value="raw" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold text-red-400">生食海鮮拒絕</div></label>
                     <label><input type="checkbox" name="avoid" value="beef" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold text-orange-400">不吃牛</div></label>
                 </div>
             </div>
 
-            <!-- 3. 目的 -->
-            <div>
-                <label class="text-sm font-black text-cyan-400 uppercase tracking-widest mb-4 block border-l-4 border-cyan-400 pl-3">Phase 03: 核心目的標籤</label>
-                <select id="purpose" class="tech-select w-full p-4 rounded-lg font-bold outline-none">
-                    <option value="eat">認真吃飯 (吃完就散)</option>
-                    <option value="talk">瘋狂聊天 (環境安靜)</option>
-                    <option value="photo">拍照打卡 (視覺優先)</option>
-                    <option value="family">溫馨家庭 (友善空間)</option>
-                </select>
-            </div>
-
             <button type="submit" class="btn-glow w-full py-5 rounded-lg mt-4 shadow-2xl transform active:scale-95 transition-all uppercase">
-                啟動數據傳輸
+                確認上傳數據
             </button>
         </form>
     </div>
 
+    <!-- 模擬上傳與結果頁面 (UPLOAD 畫面) -->
+    <div id="uploadPage" class="tech-card w-full max-w-xl p-8 m-4 relative overflow-hidden page-transition">
+        <div class="text-center space-y-8 py-10">
+            <div id="uploadStatus">
+                <div class="inline-block animate-spin mb-4">
+                    <svg class="w-12 h-12 text-cyan-400" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-xl font-bold text-white tracking-widest">數據加密傳輸中...</h2>
+                <div class="w-full bg-gray-800 rounded-full h-1 mt-6">
+                    <div id="loadingBar" class="progress-bar"></div>
+                </div>
+            </div>
+
+            <div id="successContent" class="hidden space-y-6">
+                <div class="w-20 h-20 bg-cyan-400/20 rounded-full flex items-center justify-center mx-auto border-2 border-cyan-400 shadow-[0_0_30px_rgba(0,242,255,0.4)]">
+                    <span class="text-4xl">✅</span>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-black text-white mb-2">UPLOAD COMPLETE</h2>
+                    <p class="text-gray-400">身份識別確認：<span id="displayUserName" class="text-cyan-400 font-bold underline"></span></p>
+                </div>
+                <div class="bg-black/50 p-4 rounded border border-gray-700 font-mono text-xs text-left">
+                    <div class="text-cyan-400">> 正在同步雲端伺服器...</div>
+                    <div class="text-cyan-400">> 成功鎖定聚餐意向</div>
+                    <div class="text-gray-500">> 已禁止後續抱怨權限</div>
+                </div>
+                <p class="text-xs text-gray-500 italic">您現在可以關閉此分頁，或等待主辦人聯絡。</p>
+                <button onclick="window.location.href='https://gb.iu8.cc.cd/upload.html'" class="text-cyan-400 text-xs underline mt-4 opacity-50 hover:opacity-100">
+                    若未自動導向請點擊此處
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        const surveyPage = document.getElementById('surveyPage');
+        const uploadPage = document.getElementById('uploadPage');
+        const loadingBar = document.getElementById('loadingBar');
+        const uploadStatus = document.getElementById('uploadStatus');
+        const successContent = document.getElementById('successContent');
+        const displayUserName = document.getElementById('displayUserName');
+
         document.getElementById('surveyForm').onsubmit = (e) => {
             e.preventDefault();
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData);
-            data.avoid = formData.getAll('avoid');
-            data.purpose = document.getElementById('purpose').value;
-            data.timestamp = new Date().toISOString();
+            
+            // 取得名字
+            const name = document.getElementById('userName').value;
+            displayUserName.innerText = name;
 
-            sessionStorage.setItem('surveyData', JSON.stringify(data));
-            window.location.href = 'https://gb.iu8.cc.cd/upload.html';
+            // 切換頁面 (SPA 效果)
+            surveyPage.classList.remove('active');
+            uploadPage.classList.add('active');
+
+            // 啟動進度條動畫
+            setTimeout(() => {
+                loadingBar.style.width = '100%';
+            }, 100);
+
+            // 模擬上傳完成 (2.5秒後)
+            setTimeout(() => {
+                uploadStatus.classList.add('hidden');
+                successContent.classList.remove('hidden');
+
+                // 最終跳轉到指定網址 (如果使用者還沒關閉頁面，5秒後導向)
+                setTimeout(() => {
+                    window.location.href = 'https://gb.iu8.cc.cd/upload.html';
+                }, 5000);
+
+            }, 2500);
         };
     </script>
 </body>

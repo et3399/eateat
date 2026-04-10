@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聚餐糾察隊 - 填完才准吃！</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-card {
+            transition: all 0.2s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .option-card:hover {
+            transform: translateY(-2px);
+            background-color: #fffaf0;
+        }
+
+        input[type="radio"]:checked + .option-content,
+        input[type="checkbox"]:checked + .option-content {
+            background-color: #fff3e0;
+            border-color: #fb923c;
+        }
+
+        /* 隱藏原生 input 但保持可選取性 */
+        .hidden-input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+
+    <div class="glass-card w-full max-w-lg p-8 md:p-10">
+        <!-- 標題區 -->
+        <div class="text-center mb-8">
+            <span class="text-5xl">🍴</span>
+            <h1 class="text-3xl font-bold text-gray-800 mt-4">聚餐糾察隊</h1>
+            <p class="text-gray-600 mt-2">為了避免心累，請誠實填寫意向。<br><span class="text-orange-600 font-bold">送出後禁止靠北餐廳太貴或不好吃！</span></p>
+        </div>
+
+        <form id="surveyForm" class="space-y-8">
+            
+            <!-- 1. 預算 -->
+            <div>
+                <label class="text-lg font-bold text-gray-700 block mb-4">1. 你的最高預算 (每人計)</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="option-card relative">
+                        <input type="radio" name="budget" value="300" class="hidden-input" required>
+                        <div class="option-content p-4 text-center rounded-xl border-2 border-gray-100 bg-white">
+                            <div class="text-sm font-bold">$300 以下</div>
+                            <div class="text-xs text-gray-400">小資美食</div>
+                        </div>
+                    </label>
+                    <label class="option-card relative">
+                        <input type="radio" name="budget" value="600" class="hidden-input">
+                        <div class="option-content p-4 text-center rounded-xl border-2 border-gray-100 bg-white">
+                            <div class="text-sm font-bold">$300 - $600</div>
+                            <div class="text-xs text-gray-400">一般聚餐</div>
+                        </div>
+                    </label>
+                    <label class="option-card relative">
+                        <input type="radio" name="budget" value="1000" class="hidden-input">
+                        <div class="option-content p-4 text-center rounded-xl border-2 border-gray-100 bg-white">
+                            <div class="text-sm font-bold">$600 - $1000</div>
+                            <div class="text-xs text-gray-400">精緻質感</div>
+                        </div>
+                    </label>
+                    <label class="option-card relative">
+                        <input type="radio" name="budget" value="unlimited" class="hidden-input">
+                        <div class="option-content p-4 text-center rounded-xl border-2 border-gray-100 bg-white">
+                            <div class="text-sm font-bold">無上限</div>
+                            <div class="text-xs text-gray-400">今天我發了</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 2. 避雷針 -->
+            <div>
+                <label class="text-lg font-bold text-gray-700 block mb-4">2. 絕對不吃 / 討厭的類型 (多選)</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="option-card relative">
+                        <input type="checkbox" name="avoid" value="buffet" class="hidden-input">
+                        <div class="option-content p-4 text-center rounded-xl border-2 border-gray-100 bg-white">
+                            <span class="text-sm">吃到飽 (怕太撐)</span>
+                        </div>
+                    </label>
+                    <label class="option-card relative">
+                        <input type="checkbox" name="avoid" value="vegan" class="hidden-input">
+                        <div class="option-content p-4 text-center rounded-xl border-2 border-gray-100 bg-white">
+                            <span class="text-sm">全素食 (要肉肉)</span>
+                        </div>
+                    </label>
+                    <label class="option-card relative">
+                        <input type="checkbox" name="avoid" value="raw" class="hidden-input">
+                        <div class="option-content p-4 text-center rounded-xl border-2 border-gray-100 bg-white">
+                            <span class="text-sm">生食/海鮮</span>
+                        </div>
+                    </label>
+                    <label class="option-card relative">
+                        <input type="checkbox" name="avoid" value="spicy" class="hidden-input">
+                        <div class="option-content p-4 text-center rounded-xl border-2 border-gray-100 bg-white">
+                            <span class="text-sm">太辣 (腸胃弱)</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 3. 目的 -->
+            <div>
+                <label class="text-lg font-bold text-gray-700 block mb-4">3. 這次聚餐的目的</label>
+                <select id="purpose" class="w-full p-4 rounded-xl border-2 border-gray-100 focus:border-orange-400 outline-none bg-white">
+                    <option value="eat">認真吃飯 (吃完就散)</option>
+                    <option value="talk">瘋狂聊天 (環境安靜/不限時)</option>
+                    <option value="photo">拍照打卡 (裝潢漂亮)</option>
+                </select>
+            </div>
+
+            <!-- 提交 -->
+            <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 rounded-xl shadow-lg transform active:scale-95 transition-all text-lg">
+                確認送出 (即代表簽署不嫌約法)
+            </button>
+        </form>
+
+        <!-- 結果顯示區 -->
+        <div id="resultSection" class="hidden mt-10 p-6 bg-green-50 rounded-2xl border-2 border-green-200 text-center">
+            <div class="text-4xl mb-2">✅</div>
+            <h2 class="text-xl font-bold text-green-800">收到！資料已存檔</h2>
+            <p class="text-green-700 mt-2">請耐心等候主辦人公告餐廳，<br>任何異議將被自動無視。</p>
+            <button onclick="location.reload()" class="mt-4 text-sm text-green-600 underline">重新填寫</button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('surveyForm');
+        const resultSection = document.getElementById('resultSection');
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            
+            // 取得數據
+            const formData = new FormData(form);
+            const data = {
+                budget: formData.get('budget'),
+                avoid: formData.getAll('avoid'),
+                purpose: document.getElementById('purpose').value,
+                time: new Date().toLocaleString()
+            };
+
+            console.log('收集到的數據:', data);
+
+            // --- 此處為統計結果的關鍵說明 ---
+            // 因為這是靜態 HTML，無法直接存入資料庫。
+            // 方案 A: 串接 Google 表單 (推薦)
+            // 你可以建立一個 Google 表單，取得 entry ID 後在此 fetch 出去。
+            
+            // 這裡我們先模擬成功畫面
+            form.classList.add('hidden');
+            resultSection.classList.remove('hidden');
+
+            // 如果你想看「目前」的統計，你可以把這個 data 存到 localStorage，
+            // 但這只有在同一台電腦看得到。真正的統計需要後台。
+        };
+    </script>
+</body>
+</html>

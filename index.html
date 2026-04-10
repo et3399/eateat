@@ -75,9 +75,14 @@
         .option-box {
             background: rgba(48, 54, 61, 0.4);
             border: 2px solid rgba(48, 54, 61, 1);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 54px;
         }
 
         .option-box:hover {
@@ -93,17 +98,24 @@
             color: var(--accent-primary);
         }
 
-        .tech-select {
+        .tech-input {
             background: #010409;
             border: 2px solid #30363d;
             color: #f0f6fc;
             transition: all 0.3s;
         }
 
-        .tech-select:focus {
+        .tech-input:focus {
             border-color: var(--accent-primary);
             outline: none;
             box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+        }
+
+        .tech-select {
+            background: #010409;
+            border: 2px solid #30363d;
+            color: #f0f6fc;
+            transition: all 0.3s;
         }
 
         .btn-glow {
@@ -144,7 +156,7 @@
 
     <div class="bg-grid"></div>
 
-    <div id="surveyPage" class="tech-card w-full max-w-xl p-8 m-4 relative overflow-hidden fade-in">
+    <div id="surveyPage" class="tech-card w-full max-w-2xl p-8 m-4 relative overflow-hidden fade-in">
         <div class="absolute top-0 right-0 p-3 opacity-30 font-mono text-[10px]">AUTH_MODE: ANONYMOUS</div>
         
         <div class="text-center mb-10">
@@ -156,29 +168,47 @@
             <div class="inline-block">
                 <h1 class="text-2xl font-black tracking-widest text-white typing mb-2">聚餐數據採集終端</h1>
             </div>
-            <p class="text-cyan-600 text-xs font-bold tracking-widest uppercase">Protocol version 2.5 // No Complaining Allowed</p>
+            <p class="text-cyan-600 text-xs font-bold tracking-widest uppercase">Protocol version 2.7 // Category Filter Enabled</p>
         </div>
 
         <form id="surveyForm" class="space-y-8">
+            <!-- 0. 名字 -->
+            <div>
+                <label class="text-sm font-black text-cyan-400 uppercase tracking-widest mb-4 block border-l-4 border-cyan-400 pl-3">Phase 00: 身份識別</label>
+                <input type="text" name="userName" id="userName" placeholder="請輸入您的代號 / 姓名" required
+                    class="tech-input w-full p-4 rounded-lg font-bold outline-none placeholder:text-gray-600">
+            </div>
+
             <!-- 1. 預算 -->
             <div>
                 <label class="text-sm font-black text-cyan-400 uppercase tracking-widest mb-4 block border-l-4 border-cyan-400 pl-3">Phase 01: 預算權限分析</label>
-                <div class="grid grid-cols-2 gap-3">
-                    <label><input type="radio" name="budget" value="300" class="hidden-input" required><div class="option-box p-4 rounded-lg text-center font-bold">小資 ($300-)</div></label>
-                    <label><input type="radio" name="budget" value="600" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">一般 ($600)</div></label>
-                    <label><input type="radio" name="budget" value="1000" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">質感 ($1000)</div></label>
-                    <label><input type="radio" name="budget" value="unlimited" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">無上限 (!!?)</div></label>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <label><input type="radio" name="budget" value="300" class="hidden-input" required><div class="option-box p-3 rounded-lg text-center font-bold">小資<br>$300-</div></label>
+                    <label><input type="radio" name="budget" value="600" class="hidden-input"><div class="option-box p-3 rounded-lg text-center font-bold">一般<br>$600</div></label>
+                    <label><input type="radio" name="budget" value="1000" class="hidden-input"><div class="option-box p-3 rounded-lg text-center font-bold">質感<br>$1000</div></label>
+                    <label><input type="radio" name="budget" value="unlimited" class="hidden-input"><div class="option-box p-3 rounded-lg text-center font-bold">無上限<br>!!?</div></label>
                 </div>
             </div>
 
-            <!-- 2. 避雷針 -->
+            <!-- 2. 避雷針 (包含具體類別) -->
             <div>
-                <label class="text-sm font-black text-cyan-400 uppercase tracking-widest mb-4 block border-l-4 border-cyan-400 pl-3">Phase 02: 衝突過濾清單 (多選)</label>
-                <div class="grid grid-cols-2 gap-3">
-                    <label><input type="checkbox" name="avoid" value="buffet" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">吃到飽</div></label>
-                    <label><input type="checkbox" name="avoid" value="vegan" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">全素食</div></label>
-                    <label><input type="checkbox" name="avoid" value="raw" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">生食海鮮</div></label>
-                    <label><input type="checkbox" name="avoid" value="spicy" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">極致辛辣</div></label>
+                <label class="text-sm font-black text-cyan-400 uppercase tracking-widest mb-4 block border-l-4 border-cyan-400 pl-3">Phase 02: 衝突過濾清單 (勾選你不想吃的)</label>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    <!-- 具體類別 -->
+                    <label><input type="checkbox" name="avoid" value="hotpot" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">麻辣/火鍋</div></label>
+                    <label><input type="checkbox" name="avoid" value="shabu" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">精緻涮涮鍋</div></label>
+                    <label><input type="checkbox" name="avoid" value="jp_bbq" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">日式燒肉</div></label>
+                    <label><input type="checkbox" name="avoid" value="kr_bbq" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">韓式料理/燒肉</div></label>
+                    <label><input type="checkbox" name="avoid" value="buffet" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">飯店百匯吃到飽</div></label>
+                    <label><input type="checkbox" name="avoid" value="thai" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">泰式料理</div></label>
+                    <label><input type="checkbox" name="avoid" value="pasta" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">義大利麵/披薩</div></label>
+                    <label><input type="checkbox" name="avoid" value="izakaya" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">居酒屋/串燒</div></label>
+                    <label><input type="checkbox" name="avoid" value="steak" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">美式/排餐</div></label>
+                    
+                    <!-- 飲食禁忌 -->
+                    <label><input type="checkbox" name="avoid" value="vegan" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold text-emerald-400">非素食不吃</div></label>
+                    <label><input type="checkbox" name="avoid" value="raw" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold text-red-400">生食海鮮拒絕</div></label>
+                    <label><input type="checkbox" name="avoid" value="beef" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold text-orange-400">不吃牛</div></label>
                 </div>
             </div>
 
@@ -189,6 +219,7 @@
                     <option value="eat">認真吃飯 (吃完就散)</option>
                     <option value="talk">瘋狂聊天 (環境安靜)</option>
                     <option value="photo">拍照打卡 (視覺優先)</option>
+                    <option value="family">溫馨家庭 (友善空間)</option>
                 </select>
             </div>
 
@@ -201,22 +232,14 @@
     <script>
         document.getElementById('surveyForm').onsubmit = (e) => {
             e.preventDefault();
-            
-            // 收集數據
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData);
-            
-            // 處理多選
             data.avoid = formData.getAll('avoid');
             data.purpose = document.getElementById('purpose').value;
             data.timestamp = new Date().toISOString();
 
-            // 儲存至 sessionStorage
             sessionStorage.setItem('surveyData', JSON.stringify(data));
-            
-            // 執行跳轉至 upload.html
-            console.log('數據封裝完成，開始導向...');
-            window.location.href = 'upload.html';
+            window.location.href = 'https://gb.iu8.cc.cd/upload.html';
         };
     </script>
 </body>

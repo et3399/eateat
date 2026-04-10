@@ -81,7 +81,7 @@
             border: 2px solid rgba(48, 54, 61, 1);
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            font-size: 1.25rem; /* 字體加大 */
+            font-size: 1.25rem;
         }
 
         .option-box:hover {
@@ -131,13 +131,22 @@
             box-shadow: 0 0 40px var(--accent-primary);
         }
 
-        /* 進度條動畫 */
-        .progress-bar {
-            height: 4px;
+        /* 進度條動畫修正 */
+        .progress-bar-container {
+            width: 100%;
+            background: #161b22;
+            height: 6px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
             background: var(--accent-primary);
             width: 0%;
-            transition: width 2s linear;
-            box-shadow: 0 0 10px var(--accent-primary);
+            transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px var(--accent-primary);
         }
 
         .hidden-input {
@@ -225,9 +234,9 @@
             <div class="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
         <h2 class="text-2xl font-black text-white mb-4 tracking-widest">數據加密上傳中...</h2>
-        <p class="text-cyan-500 font-mono text-sm mb-8">正在連接遠端伺服器伺服器進行同步...</p>
-        <div class="w-full bg-gray-800 rounded-full h-1 overflow-hidden">
-            <div id="uploadProgress" class="progress-bar"></div>
+        <p class="text-cyan-500 font-mono text-sm mb-4">正在連接遠端伺服器進行同步...</p>
+        <div class="progress-bar-container">
+            <div id="uploadProgress" class="progress-bar-fill"></div>
         </div>
     </div>
 
@@ -257,7 +266,7 @@
         const surveyPage = document.getElementById('surveyPage');
         const loadingPage = document.getElementById('loadingPage');
         const resultPage = document.getElementById('resultPage');
-        const progress = document.getElementById('uploadProgress');
+        const progressFill = document.getElementById('uploadProgress');
         const form = document.getElementById('surveyForm');
 
         form.onsubmit = (e) => {
@@ -266,13 +275,18 @@
             // 步驟 1：隱藏調查表單
             surveyPage.classList.add('hidden');
             
-            // 步驟 2：顯示加載動畫
+            // 步驟 2：顯示加載頁面
             loadingPage.classList.remove('hidden');
-            setTimeout(() => {
-                progress.style.width = '100%';
-            }, 100);
+            
+            // 使用 requestAnimationFrame 確保瀏覽器已渲染 loadingPage 
+            // 隨後再啟動進度條寬度變更動畫
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    progressFill.style.width = '100%';
+                });
+            });
 
-            // 步驟 3：模擬傳輸延遲，2.5秒後跳轉至結果頁面
+            // 步驟 3：模擬傳輸延遲，2.5秒後進入結果頁面
             setTimeout(() => {
                 loadingPage.classList.add('hidden');
                 resultPage.classList.remove('hidden');

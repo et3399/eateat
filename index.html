@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>聚餐糾察隊 - 終極調查系統</title>
+    <title>聚餐糾察隊</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
         
         :root {
-            --accent-primary: #00f2ff; /* 冰晶藍 */
-            --accent-secondary: #00ffaa; /* 極光綠 */
+            --accent-primary: #00f2ff;
+            --accent-secondary: #00ffaa;
             --dark-bg: #0d1117;
             --card-bg: rgba(22, 27, 34, 0.9);
         }
@@ -27,7 +27,6 @@
             position: relative;
         }
 
-        /* 背景網格動畫 */
         .bg-grid {
             position: fixed;
             top: 0; left: 0;
@@ -45,7 +44,6 @@
             to { transform: translateY(60px); }
         }
 
-        /* 核心卡片設計 */
         .tech-card {
             background: var(--card-bg);
             border: 1px solid rgba(48, 54, 61, 1);
@@ -56,7 +54,6 @@
             transition: all 0.5s ease;
         }
 
-        /* 打字機效果 */
         .typing {
             overflow: hidden;
             white-space: nowrap;
@@ -75,7 +72,6 @@
             50% { border-color: var(--accent-secondary); }
         }
 
-        /* 選項按鈕樣式 */
         .option-box {
             background: rgba(48, 54, 61, 0.4);
             border: 2px solid rgba(48, 54, 61, 1);
@@ -97,7 +93,6 @@
             color: var(--accent-primary);
         }
 
-        /* 輸入框樣式 */
         .tech-input {
             background: #010409;
             border: 2px solid #30363d;
@@ -112,7 +107,6 @@
             box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
         }
 
-        /* 提交按鈕 */
         .btn-glow {
             background: transparent;
             border: 2px solid var(--accent-primary);
@@ -131,31 +125,12 @@
             box-shadow: 0 0 40px var(--accent-primary);
         }
 
-        /* 進度條動畫修正 */
-        .progress-bar-container {
-            width: 100%;
-            background: #161b22;
-            height: 6px;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 20px;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: var(--accent-primary);
-            width: 0%;
-            transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 15px var(--accent-primary);
-        }
-
         .hidden-input {
             position: absolute;
             opacity: 0;
             width: 0; height: 0;
         }
 
-        /* 頁面進入動畫 */
         .fade-in {
             animation: fadeIn 0.8s forwards;
         }
@@ -170,9 +145,8 @@
 
     <div class="bg-grid"></div>
 
-    <!-- 調查表單頁面 -->
     <div id="surveyPage" class="tech-card w-full max-w-2xl p-10 m-6 relative overflow-hidden fade-in">
-        <div class="absolute top-0 right-0 p-3 opacity-30 font-mono text-xs">系統狀態：在線</div>
+        <div class="absolute top-0 right-0 p-3 opacity-30 font-mono text-xs">系統狀態：待命</div>
         
         <div class="text-center mb-14">
             <div class="flex justify-center mb-6">
@@ -211,15 +185,7 @@
 
             <div>
                 <label class="text-lg font-black text-cyan-400 uppercase tracking-widest mb-6 block border-l-4 border-cyan-400 pl-3">第 03 階段：座標範圍查詢</label>
-                <input type="text" name="location" placeholder="輸入搜尋地區 (如：信義區、西門)..." class="tech-input w-full p-6 rounded-lg font-bold">
-            </div>
-
-            <div>
-                <label class="text-lg font-black text-emerald-400 uppercase tracking-widest mb-6 block border-l-4 border-emerald-400 pl-3">第 04 階段：安全防禦過濾</label>
-                <div class="flex gap-4">
-                    <label class="flex-1"><input type="checkbox" name="avoid" value="vegan" class="hidden-input"><div class="option-box p-5 rounded-lg text-center font-bold">排除全素</div></label>
-                    <label class="flex-1"><input type="checkbox" name="avoid" value="spicy" class="hidden-input"><div class="option-box p-5 rounded-lg text-center font-bold">排除太辣</div></label>
-                </div>
+                <input type="text" name="location" placeholder="輸入搜尋地區 (如：信義區)..." class="tech-input w-full p-6 rounded-lg font-bold">
             </div>
 
             <button type="submit" class="btn-glow w-full py-6 rounded-lg mt-8">
@@ -228,69 +194,15 @@
         </form>
     </div>
 
-    <!-- 上傳加載中頁面 -->
-    <div id="loadingPage" class="hidden tech-card w-full max-w-md p-12 text-center fade-in">
-        <div class="flex justify-center mb-8">
-            <div class="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
-        </div>
-        <h2 class="text-2xl font-black text-white mb-4 tracking-widest">數據加密上傳中...</h2>
-        <p class="text-cyan-500 font-mono text-sm mb-4">正在連接遠端伺服器進行同步...</p>
-        <div class="progress-bar-container">
-            <div id="uploadProgress" class="progress-bar-fill"></div>
-        </div>
-    </div>
-
-    <!-- 上傳成功結果頁面 -->
-    <div id="resultPage" class="hidden tech-card w-full max-w-xl p-12 text-center fade-in">
-        <div class="mb-10 relative inline-block">
-            <div class="absolute inset-0 bg-cyan-400 blur-3xl opacity-30 animate-pulse"></div>
-            <span class="text-8xl relative">📡</span>
-        </div>
-        <h2 class="text-4xl font-black text-white mb-8 tracking-tighter">數據已成功上傳</h2>
-        <div class="bg-black/50 p-8 border-l-4 border-emerald-400 text-left mb-10 rounded-r-lg shadow-inner">
-            <p class="text-emerald-400 font-mono text-lg leading-loose">
-                > 資料同步狀態：完成 (100%)<br>
-                > 目標主機：CL-SERVER-09<br>
-                > 安全等級：最高加密<br>
-                <br>
-                > <span class="text-white">系統通知：</span>主辦人已收到報告，<br>
-                　 禁止任何形式的餐廳抱怨。
-            </p>
-        </div>
-        <button onclick="location.reload()" class="text-gray-500 hover:text-cyan-400 text-sm font-bold transition-all tracking-widest border border-gray-700 px-6 py-2 rounded-full hover:border-cyan-400">
-            >> 重啟調查系統
-        </button>
-    </div>
-
     <script>
-        const surveyPage = document.getElementById('surveyPage');
-        const loadingPage = document.getElementById('loadingPage');
-        const resultPage = document.getElementById('resultPage');
-        const progressFill = document.getElementById('uploadProgress');
-        const form = document.getElementById('surveyForm');
-
-        form.onsubmit = (e) => {
+        document.getElementById('surveyForm').onsubmit = (e) => {
             e.preventDefault();
+            // 模擬將資料儲存到 sessionStorage
+            const formData = new FormData(e.target);
+            sessionStorage.setItem('surveyData', JSON.stringify(Object.fromEntries(formData)));
             
-            // 步驟 1：隱藏調查表單
-            surveyPage.classList.add('hidden');
-            
-            // 步驟 2：顯示加載頁面
-            loadingPage.classList.remove('hidden');
-            
-            // 使用 requestAnimationFrame 確保瀏覽器已渲染 loadingPage 
-            // 隨後再啟動進度條寬度變更動畫
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    progressFill.style.width = '100%';
-                });
-            });
-
-            // 步驟 3：模擬傳輸延遲，2.5秒後進入結果頁面
-            setTimeout(() => {
-                loadingPage.classList.add('hidden');
-                resultPage.classList.remove('hidden');
-            }, 2500);
+            // 跳轉到 upload.html
+            window.location.href = 'upload.html';
         };
     </script>
 </body>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聚餐數據採集終端</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        :root {
+            --accent-primary: #00f2ff;
+            --accent-secondary: #00ffaa;
+            --dark-bg: #0d1117;
+            --card-bg: rgba(22, 27, 34, 0.9);
+        }
+
+        body {
+            font-family: 'JetBrains Mono', 'Noto Sans TC', sans-serif;
+            background-color: var(--dark-bg);
+            color: #c9d1d9;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: -1;
+            animation: grid-move 20s linear infinite;
+        }
+
+        @keyframes grid-move {
+            from { transform: translateY(0); }
+            to { transform: translateY(60px); }
+        }
+
+        .tech-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(48, 54, 61, 1);
+            border-top: 6px solid var(--accent-primary);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .upload-animation {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cloud-icon {
+            position: relative;
+            z-index: 2;
+            color: #00f2ff;
+            filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.5));
+        }
+        .data-particle {
+            position: absolute;
+            bottom: 0;
+            width: 4px;
+            height: 12px;
+            background: #00f2ff;
+            border-radius: 2px;
+            opacity: 0;
+            animation: upload-stream 1.5s infinite linear;
+        }
+        .data-particle:nth-child(2) { left: 30%; animation-delay: 0.2s; }
+        .data-particle:nth-child(3) { left: 50%; animation-delay: 0.5s; }
+        .data-particle:nth-child(4) { left: 70%; animation-delay: 0.8s; }
+        .data-particle:nth-child(5) { left: 40%; animation-delay: 1.1s; }
+
+        @keyframes upload-stream {
+            0% { transform: translateY(40px); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-40px); opacity: 0; }
+        }
+
+        .success-glow {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(0, 242, 255, 0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: glow-pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.3); opacity: 0.8; }
+        }
+
+        .progress-line-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--accent-primary);
+            box-shadow: 0 0 15px var(--accent-primary);
+            transition: width 0.1s linear;
+        }
+
+        .option-box {
+            background: rgba(48, 54, 61, 0.4);
+            border: 2px solid rgba(48, 54, 61, 1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 54px;
+        }
+
+        .option-box:hover {
+            border-color: var(--accent-primary);
+            background: rgba(0, 242, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        input:checked + .option-box {
+            border-color: var(--accent-primary);
+            background: rgba(0, 242, 255, 0.15);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+            color: var(--accent-primary);
+        }
+
+        input[name="avoid"]:checked + .option-box {
+            border-color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+            box-shadow: 0 0 20px rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+        }
+
+        .tech-input {
+            background: #010409;
+            border: 2px solid #30363d;
+            color: #f0f6fc;
+            transition: all 0.3s;
+        }
+
+        .tech-input:focus {
+            border-color: var(--accent-primary);
+            outline: none;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+        }
+
+        .btn-glow {
+            background: transparent;
+            border: 2px solid var(--accent-primary);
+            color: var(--accent-primary);
+            font-size: 1.25rem;
+            font-weight: 900;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+            letter-spacing: 0.2em;
+        }
+
+        .btn-glow:hover {
+            background: var(--accent-primary);
+            color: var(--dark-bg);
+            box-shadow: 0 0 40px var(--accent-primary);
+        }
+
+        .hidden-input {
+            position: absolute;
+            opacity: 0;
+            width: 0; height: 0;
+        }
+
+        .page-container {
+            display: none;
+        }
+        .page-container.active {
+            display: block;
+            animation: slideUp 0.6s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+
+    <div class="tech-card w-full max-w-2xl p-8 m-4 relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-3 opacity-30 font-mono text-[10px]">SYSTEM_STATUS: STABLE</div>
+
+        <!-- 頁面 1: 調查表單 -->
+        <div id="formView" class="page-container active">
+            <div class="text-center mb-10">
+                <div class="flex justify-center mb-4">
+                    <div class="w-16 h-16 rounded-full border-2 border-cyan-400 flex items-center justify-center animate-pulse">
+                        <span class="text-4xl">🍴</span>
+                    </div>
+                </div>
+                <h1 class="text-2xl font-black tracking-widest text-white mb-2">聚餐數據採集終端</h1>
+                <p class="text-cyan-600 text-xs font-bold tracking-widest uppercase">Protocol 5.0 // Cloud Edge Distribution</p>
+            </div>
+
+            <form id="surveyForm" class="space-y-8">
+                <div>
+                    <label class="text-sm font-black text-cyan-400 uppercase tracking-widest mb-4 block border-l-4 border-cyan-400 pl-3">Phase 00: 身份識別</label>
+                    <input type="text" name="userName" id="userName" placeholder="請輸入您的代號 / 姓名" required
+                        class="tech-input w-full p-4 rounded-lg font-bold outline-none placeholder:text-gray-600">
+                </div>
+
+                <div>
+                    <label class="text-sm font-black text-cyan-400 uppercase tracking-widest mb-4 block border-l-4 border-cyan-400 pl-3">Phase 01: 預算權限</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <label><input type="radio" name="budget" value="300" class="hidden-input" required><div class="option-box p-3 rounded-lg text-center font-bold">小資<br>$300-</div></label>
+                        <label><input type="radio" name="budget" value="600" class="hidden-input" checked><div class="option-box p-3 rounded-lg text-center font-bold">一般<br>$600</div></label>
+                        <label><input type="radio" name="budget" value="1000" class="hidden-input"><div class="option-box p-3 rounded-lg text-center font-bold">質感<br>$1000</div></label>
+                        <label><input type="radio" name="budget" value="unlimited" class="hidden-input"><div class="option-box p-3 rounded-lg text-center font-bold">無上限<br>!∞</div></label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-sm font-black text-cyan-400 uppercase tracking-widest mb-4 block border-l-4 border-cyan-400 pl-3">Phase 02: 類別過濾 (勾選不想吃的)</label>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        <label><input type="checkbox" name="avoid" value="hotpot" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">麻辣/火鍋</div></label>
+                        <label><input type="checkbox" name="avoid" value="shabu" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">精緻涮涮鍋</div></label>
+                        <label><input type="checkbox" name="avoid" value="jp_bbq" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">日式燒肉</div></label>
+                        <label><input type="checkbox" name="avoid" value="kr_bbq" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">韓式燒肉</div></label>
+                        <label><input type="checkbox" name="avoid" value="buffet" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">百匯吃到飽</div></label>
+                        <label><input type="checkbox" name="avoid" value="izakaya" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold">居酒屋/串燒</div></label>
+                        <label><input type="checkbox" name="avoid" value="vegan" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold text-emerald-400">素食</div></label>
+                        <label><input type="checkbox" name="avoid" value="no_raw" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold text-red-400">生食海鮮</div></label>
+                        <label><input type="checkbox" name="avoid" value="no_beef" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold text-orange-400">不吃牛</div></label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-glow w-full py-5 rounded-lg mt-4 shadow-2xl transform active:scale-95 transition-all">
+                    確認送出數據
+                </button>
+            </form>
+        </div>
+
+        <!-- 頁面 2: 上傳中 -->
+        <div id="uploadingView" class="page-container">
+            <div class="text-center py-20">
+                <div class="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-8"></div>
+                <h2 class="text-xl font-black text-white mb-2 tracking-widest uppercase">數據加密傳輸中</h2>
+                <div class="w-full bg-[#161b22] h-2 rounded-full overflow-hidden my-6 border border-cyan-900">
+                    <div id="barFill" class="progress-line-fill" style="width: 0%"></div>
+                </div>
+                <div id="percentText" class="text-cyan-400 font-mono text-lg">0%</div>
+                <p class="text-xs text-gray-500 mt-4">正在封裝協議並推送至全球邊緣節點...</p>
+            </div>
+        </div>
+
+        <!-- 頁面 3: 最終成功畫面 -->
+        <div id="successView" class="page-container">
+            <div class="text-center py-6">
+                <div class="upload-animation">
+                    <div class="success-glow"></div>
+                    <svg class="cloud-icon w-20 h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v8"></path>
+                    </svg>
+                    <div class="data-particle"></div>
+                    <div class="data-particle"></div>
+                    <div class="data-particle"></div>
+                    <div class="data-particle"></div>
+                    <div class="data-particle"></div>
+                </div>
+
+                <!-- 標題字體加大至 text-4xl 並增加外距 -->
+                <h2 class="text-4xl font-black text-white mb-10 uppercase tracking-tighter italic">Upload Success</h2>
+                
+                <div class="bg-black/60 p-8 text-left border-l-4 border-emerald-400 rounded-lg font-mono space-y-5 mb-10 shadow-inner">
+                    <p class="text-emerald-400 text-lg font-bold">> STATUS: <span class="text-white">DATA_SYNC_COMPLETE</span></p>
+                    <p class="text-cyan-400 text-lg font-bold">> TARGET_ID: <span id="resultName" class="font-bold underline text-white"></span></p>
+                    <p class="text-orange-400 text-lg font-bold">> NODE: <span class="text-white">IU8_EDGE_SERVER</span></p>
+                    <p class="text-gray-400 text-base mt-6 border-t border-white/10 pt-4 italic leading-relaxed">
+                        > 數據採集完成。加密協議已終止，請靜候主辦人進一步通知。
+                    </p>
+                </div>
+
+                <div class="pt-4">
+                    <p class="text-[10px] text-gray-700 font-mono">CONNECTION_TERMINATED_BY_SERVER</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('surveyForm');
+        const formView = document.getElementById('formView');
+        const uploadingView = document.getElementById('uploadingView');
+        const successView = document.getElementById('successView');
+        
+        const barFill = document.getElementById('barFill');
+        const percentText = document.getElementById('percentText');
+        const resultName = document.getElementById('resultName');
+
+        form.onsubmit = (e) => {
+            e.preventDefault();
+            
+            const userName = document.getElementById('userName').value;
+            resultName.innerText = userName;
+
+            formView.classList.remove('active');
+            uploadingView.classList.add('active');
+
+            let p = 0;
+            const itv = setInterval(() => {
+                p += Math.floor(Math.random() * 12) + 5;
+                if(p >= 100) {
+                    p = 100;
+                    clearInterval(itv);
+                    
+                    setTimeout(() => {
+                        uploadingView.classList.remove('active');
+                        successView.classList.add('active');
+                    }, 500);
+                }
+                barFill.style.width = p + '%';
+                percentText.innerText = p + '%';
+            }, 100);
+        };
+    </script>
+</body>
+</html>

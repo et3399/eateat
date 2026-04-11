@@ -6,133 +6,65 @@
     <title>聚餐糾察隊 - 終極調查系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;500;700;900&display=swap');
-        
-        :root {
-            --accent-primary: #00f2ff;
-            --dark-bg: #0d1117;
-            --card-bg: rgba(22, 27, 34, 0.9);
-        }
-
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: var(--dark-bg);
-            color: #c9d1d9;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        .bg-grid {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background-image: 
-                linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
-            z-index: -1;
-        }
-
-        .tech-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(48, 54, 61, 1);
-            border-top: 6px solid var(--accent-primary);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(15px);
-            border-radius: 12px;
-        }
-
-        .option-box {
-            background: rgba(48, 54, 61, 0.4);
-            border: 2px solid rgba(48, 54, 61, 1);
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        input:checked + .option-box {
-            border-color: var(--accent-primary);
-            background: rgba(0, 242, 255, 0.15);
-            color: var(--accent-primary);
-        }
-
-        .btn-glow {
-            border: 2px solid var(--accent-primary);
-            color: var(--accent-primary);
-            transition: all 0.4s;
-            letter-spacing: 0.3em;
-        }
-
-        .btn-glow:hover {
-            background: var(--accent-primary);
-            color: var(--dark-bg);
-            box-shadow: 0 0 30px var(--accent-primary);
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+        :root { --accent-primary: #00f2ff; --dark-bg: #0d1117; --card-bg: rgba(22, 27, 34, 0.9); }
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: var(--dark-bg); color: #c9d1d9; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; }
+        .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px); background-size: 60px 60px; z-index: -1; }
+        .tech-card { background: var(--card-bg); border: 1px solid #30363d; border-top: 6px solid var(--accent-primary); box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6); backdrop-filter: blur(15px); border-radius: 12px; }
+        .option-box { background: rgba(48, 54, 61, 0.4); border: 2px solid #30363d; transition: all 0.2s; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70px; }
+        input:checked + .option-box { border-color: var(--accent-primary); background: rgba(0, 242, 255, 0.15); }
+        .color-vegan { color: #50e3c2; } .color-raw { color: #ff6b6b; } .color-no-beef { color: #f5a623; }
+        input:checked + .option-box.border-vegan { border-color: #50e3c2; background: rgba(80, 227, 194, 0.1); }
+        input:checked + .option-box.border-raw { border-color: #ff6b6b; background: rgba(255, 107, 107, 0.1); }
+        input:checked + .option-box.border-no-beef { border-color: #f5a623; background: rgba(245, 166, 35, 0.1); }
+        .btn-glow { border: 2px solid var(--accent-primary); color: var(--accent-primary); letter-spacing: 0.3em; font-family: 'JetBrains Mono', monospace; transition: all 0.4s; }
+        .btn-glow:hover { background: var(--accent-primary); color: var(--dark-bg); box-shadow: 0 0 30px var(--accent-primary); }
         .hidden-input { position: absolute; opacity: 0; width: 0; height: 0; }
     </style>
 </head>
 <body>
     <div class="bg-grid"></div>
-
-    <div id="surveyPage" class="tech-card w-full max-w-2xl p-10 m-6 relative">
+    <div class="tech-card w-full max-w-2xl p-8 md:p-12 m-6">
         <div class="text-center mb-10">
-            <h1 class="text-3xl font-black tracking-widest text-white mb-2">聚餐偏好掃描系統</h1>
-            <p class="text-cyan-600 text-sm font-bold tracking-widest uppercase">數據採集協議已啟動</p>
+            <h1 class="text-3xl font-black tracking-widest text-white mb-2 uppercase">聚餐偏好掃描系統</h1>
+            <p class="text-cyan-600 text-[10px] font-bold tracking-[0.4em] uppercase">SECURE PROTOCOL V5.0 // DATA ACQUISITION</p>
         </div>
-
-        <form id="surveyForm" class="space-y-8">
-            <!-- 名字輸入 -->
-            <div>
-                <label class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3 block border-l-2 border-cyan-400 pl-2">Phase 00: 識別名單</label>
-                <input type="text" name="username" required placeholder="輸入您的代號..." class="w-full bg-black/50 border-2 border-[#30363d] p-4 rounded-lg focus:border-cyan-400 outline-none text-white font-bold">
+        <form id="surveyForm" class="space-y-10">
+            <div class="space-y-4">
+                <label class="text-xs font-bold text-cyan-400 uppercase tracking-widest block border-l-4 border-cyan-400 pl-3">PHASE 00: 身份識別</label>
+                <input type="text" name="username" required placeholder="ENTER VISITOR ID..." class="w-full bg-black/50 border-2 border-[#30363d] p-4 rounded-lg focus:border-cyan-400 outline-none text-white font-bold">
             </div>
-
-            <!-- 預算 -->
-            <div>
-                <label class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3 block border-l-2 border-cyan-400 pl-2">Phase 01: 預算分析</label>
-                <div class="grid grid-cols-2 gap-3">
-                    <label><input type="radio" name="budget" value="300" class="hidden-input" required><div class="option-box p-4 rounded-lg text-center font-bold text-sm">$300-</div></label>
-                    <label><input type="radio" name="budget" value="600" class="hidden-input" checked><div class="option-box p-4 rounded-lg text-center font-bold text-sm">$600</div></label>
-                    <label><input type="radio" name="budget" value="1200" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold text-sm">$1200</div></label>
-                    <label><input type="radio" name="budget" value="unlimited" class="hidden-input"><div class="option-box p-4 rounded-lg text-center font-bold text-sm">無上限</div></label>
+            <div class="space-y-4">
+                <label class="text-xs font-bold text-cyan-400 uppercase tracking-widest block border-l-4 border-cyan-400 pl-3">PHASE 01: 預算權限</label>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <label><input type="radio" name="budget" value="300" class="hidden-input" required><div class="option-box rounded-lg"><span class="text-[10px] opacity-60">小資</span><span class="font-bold">$300-</span></div></label>
+                    <label><input type="radio" name="budget" value="600" class="hidden-input" checked><div class="option-box rounded-lg"><span class="text-[10px] opacity-60">一般</span><span class="font-bold">$600</span></div></label>
+                    <label><input type="radio" name="budget" value="1000" class="hidden-input"><div class="option-box rounded-lg"><span class="text-[10px] opacity-60">質感</span><span class="font-bold">$1000</span></div></label>
+                    <label><input type="radio" name="budget" value="unlimited" class="hidden-input"><div class="option-box rounded-lg"><span class="text-[10px] opacity-60">無上限</span><span class="font-bold">!∞</span></div></label>
                 </div>
             </div>
-
-            <!-- 衝突過濾 -->
-            <div>
-                <label class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3 block border-l-2 border-cyan-400 pl-2">Phase 02: 衝突過濾清單 (勾選不想吃的)</label>
-                <div class="grid grid-cols-3 gap-2">
-                    <label><input type="checkbox" name="hate" value="hotpot" class="hidden-input"><div class="option-box py-3 rounded text-center text-[10px] font-bold">火鍋</div></label>
-                    <label><input type="checkbox" name="hate" value="bbq" class="hidden-input"><div class="option-box py-3 rounded text-center text-[10px] font-bold">燒肉</div></label>
-                    <label><input type="checkbox" name="hate" value="buffet" class="hidden-input"><div class="option-box py-3 rounded text-center text-[10px] font-bold">自助餐</div></label>
-                    <label><input type="checkbox" name="hate" value="raw" class="hidden-input"><div class="option-box py-3 rounded text-center text-[10px] font-bold text-red-400">生食海鮮</div></label>
-                    <label><input type="checkbox" name="hate" value="beef" class="hidden-input"><div class="option-box py-3 rounded text-center text-[10px] font-bold text-orange-400">不吃牛</div></label>
-                    <label><input type="checkbox" name="hate" value="vegan" class="hidden-input"><div class="option-box py-3 rounded text-center text-[10px] font-bold text-emerald-400">非素食</div></label>
+            <div class="space-y-4">
+                <label class="text-xs font-bold text-cyan-400 uppercase tracking-widest block border-l-4 border-cyan-400 pl-3">PHASE 02: 偏好選擇</label>
+                <div class="grid grid-cols-3 gap-3">
+                    <label><input type="checkbox" name="hate" value="hotpot" class="hidden-input"><div class="option-box py-4 rounded font-bold text-sm">麻辣/火鍋</div></label>
+                    <label><input type="checkbox" name="hate" value="shabu" class="hidden-input"><div class="option-box py-4 rounded font-bold text-sm">精緻涮涮鍋</div></label>
+                    <label><input type="checkbox" name="hate" value="jp_bbq" class="hidden-input"><div class="option-box py-4 rounded font-bold text-sm">日式燒肉</div></label>
+                    <label><input type="checkbox" name="hate" value="kr_bbq" class="hidden-input"><div class="option-box py-4 rounded font-bold text-sm">韓式燒肉</div></label>
+                    <label><input type="checkbox" name="hate" value="buffet" class="hidden-input"><div class="option-box py-4 rounded font-bold text-sm">百匯吃到飽</div></label>
+                    <label><input type="checkbox" name="hate" value="izakaya" class="hidden-input"><div class="option-box py-4 rounded font-bold text-sm">居酒屋/串燒</div></label>
+                    <label><input type="checkbox" name="hate" value="vegan" class="hidden-input"><div class="option-box py-4 rounded font-bold text-sm color-vegan border-vegan">素食</div></label>
+                    <label><input type="checkbox" name="hate" value="raw" class="hidden-input"><div class="option-box py-4 rounded font-bold text-sm color-raw border-raw">生食海鮮</div></label>
+                    <label><input type="checkbox" name="hate" value="no_beef" class="hidden-input"><div class="option-box py-4 rounded font-bold text-sm color-no-beef border-no-beef">不吃牛</div></label>
                 </div>
             </div>
-
-            <button type="submit" class="btn-glow w-full py-5 rounded-lg font-black uppercase text-sm">
-                啟動數據傳輸
-            </button>
+            <button type="submit" class="btn-glow w-full py-5 rounded-lg font-black uppercase text-sm">啟動數據傳輸</button>
         </form>
     </div>
-
     <script>
         document.getElementById('surveyForm').onsubmit = (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
-            const data = {};
-            formData.forEach((value, key) => {
-                if(!data[key]) { data[key] = value; }
-                else { 
-                    if(!Array.isArray(data[key])) data[key] = [data[key]];
-                    data[key].push(value);
-                }
-            });
+            const data = { username: formData.get('username'), budget: formData.get('budget'), hate: formData.getAll('hate') };
             sessionStorage.setItem('surveyData', JSON.stringify(data));
             window.location.href = 'upload.html';
         };

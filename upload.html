@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>數據傳輸中 - 聚餐糾察隊</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;700;900&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #0d1117; color: #c9d1d9; }
+        .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px); background-size: 60px 60px; z-index: -1; }
+        .tech-card { background: rgba(22, 27, 34, 0.9); border: 1px solid #30363d; border-top: 6px solid #00f2ff; backdrop-filter: blur(15px); border-radius: 12px; }
+        .progress-fill { height: 100%; background: #00f2ff; box-shadow: 0 0 15px #00f2ff; transition: width 0.1s linear; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+    <div class="bg-grid"></div>
+
+    <div id="loadingBox" class="tech-card w-full max-w-md p-10 text-center">
+        <div class="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-8"></div>
+        <h2 class="text-xl font-black text-white mb-2 tracking-widest">數據加密傳輸中</h2>
+        <div class="w-full bg-[#161b22] h-2 rounded-full overflow-hidden my-6 border border-cyan-900">
+            <div id="bar" class="progress-fill" style="width: 0%"></div>
+        </div>
+        <div id="percent" class="text-cyan-400 font-mono text-lg">0%</div>
+    </div>
+
+    <div id="successBox" class="hidden tech-card w-full max-w-md p-10 text-center">
+        <div class="text-6xl mb-6">📡</div>
+        <h2 class="text-3xl font-black text-white mb-6 uppercase tracking-tighter">Upload Success</h2>
+        <div class="bg-black/40 p-6 text-left border-l-4 border-emerald-400 rounded font-mono text-xs space-y-2 mb-8">
+            <p class="text-emerald-400">> STATUS: 數據已同步</p>
+            <p class="text-cyan-400">> NODE: CLOUDFLARE_EDGE</p>
+            <p class="text-gray-500">> 請靜候主辦人進一步通知</p>
+        </div>
+        <button onclick="window.location.href='eat.html'" class="text-gray-500 hover:text-cyan-400 text-xs border border-gray-700 px-6 py-2 rounded-full transition-all">
+            返回主頁
+        </button>
+    </div>
+
+    <script>
+        let p = 0;
+        const bar = document.getElementById('bar');
+        const pct = document.getElementById('percent');
+        const itv = setInterval(() => {
+            p += Math.floor(Math.random() * 5) + 2;
+            if(p >= 100) {
+                p = 100;
+                clearInterval(itv);
+                setTimeout(() => {
+                    document.getElementById('loadingBox').classList.add('hidden');
+                    document.getElementById('successBox').classList.remove('hidden');
+                }, 500);
+            }
+            bar.style.width = p + '%';
+            pct.innerText = p + '%';
+        }, 100);
+    </script>
+</body>
+</html>

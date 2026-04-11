@@ -31,34 +31,52 @@
         <div class="text-6xl mb-6">📡</div>
         <h2 class="text-3xl font-black text-white mb-6 uppercase tracking-tighter">Upload Success</h2>
         <div class="bg-black/40 p-6 text-left border-l-4 border-emerald-400 rounded font-mono text-xs space-y-3 mb-8">
-            <p class="text-emerald-400">> STATUS: 數據已同步</p>
-            <p class="text-cyan-400">> VISITOR_ID: <span id="displayName" class="font-bold underline">UNKNOWN</span></p>
-            <p class="text-cyan-400">> NODE: IU8 Backend</p>
-            <p class="text-gray-500 mt-4 font-sans italic">數據採集完成。請靜候主辦人進一步通知。</p>
+            <p class="text-emerald-400">> STATUS: DATA_SYNC_COMPLETE</p>
+            <p class="text-cyan-400">> TARGET_ID: <span id="userNameDisplay" class="font-bold underline text-white">取得中...</span></p>
+            <p class="text-cyan-400">> NODE: CLOUDFLARE_EDGE_SERVER</p>
+            <p class="text-gray-500 mt-4 italic">> 數據採集完成。請靜候主辦人通知。</p>
         </div>
-        <button onclick="window.location.href='eat.html'" class="text-[10px] text-gray-600 hover:text-cyan-400 transition-colors uppercase tracking-widest font-bold">Close Terminal</button>
+        <button onclick="location.reload()" class="text-[10px] text-gray-600 hover:text-cyan-400 transition-colors tracking-widest uppercase">Restart Link</button>
     </div>
 
     <script>
-        // 從 sessionStorage 擷取資料
-        const rawData = sessionStorage.getItem('surveyData');
-        if (rawData) {
-            const data = JSON.parse(rawData);
-            // 將名字填入顯示區域
-            if (data.username) {
-                document.getElementById('displayName').innerText = data.username;
+        // 1. 嘗試從各種可能的儲存位置抓取名字
+        function getCapturedName() {
+            // 優先檢查 sessionStorage (通常 React 跳轉會存這裡)
+            const sessionName = sessionStorage.getItem('userName');
+            if (sessionName) return sessionName;
+
+            // 檢查是否是以 JSON 物件形式儲存的
+            const surveyData = sessionStorage.getItem('surveyData');
+            if (surveyData) {
+                try {
+                    const parsed = JSON.parse(surveyData);
+                    if (parsed.username) return parsed.username;
+                } catch(e) {}
             }
+
+            // 備案：檢查 URL 參數 (如果是 index.html?name=xxx 傳過來的話)
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('name')) return urlParams.get('name');
+
+            return "UNKNOWN_USER";
         }
 
-        // 模擬進度條邏輯
+        // 執行進度條動畫
         let p = 0;
         const bar = document.getElementById('bar');
         const pct = document.getElementById('percent');
+        const userDisplay = document.getElementById('userNameDisplay');
+
         const itv = setInterval(() => {
             p += Math.floor(Math.random() * 8) + 2;
             if(p >= 100) {
                 p = 100;
                 clearInterval(itv);
+                
+                // 傳輸完成後顯示名字
+                userDisplay.innerText = getCapturedName();
+
                 setTimeout(() => {
                     document.getElementById('loadingBox').classList.add('hidden');
                     document.getElementById('successBox').classList.remove('hidden');
@@ -66,7 +84,7 @@
             }
             bar.style.width = p + '%';
             pct.innerText = p + '%';
-        }, 80);
+        }, 100);
     </script>
 </body>
 </html>

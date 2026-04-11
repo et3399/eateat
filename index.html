@@ -6,19 +6,20 @@ const App = () => {
   const [userName, setUserName] = useState('');
   const [progress, setProgress] = useState(0);
 
-  // 模擬數據上傳進度條
+  // 模擬數據上傳進度條 - 已調快速度
   useEffect(() => {
     if (step === 'uploading') {
       const interval = setInterval(() => {
         setProgress((prev) => {
           if (prev >= 100) {
             clearInterval(interval);
-            setTimeout(() => setStep('success'), 500);
+            setTimeout(() => setStep('success'), 400); // 縮短完成後的延遲
             return 100;
           }
-          return prev + 5;
-        });
-      }, 100);
+          // 將原本的 5 調整為 10，並縮短 interval 時間以增加流暢度與速度
+          return prev + 10; 
+        }, 80); // 原本是 100ms，現在縮短為 80ms
+      }, [step]);
       return () => clearInterval(interval);
     }
   }, [step]);
@@ -174,7 +175,7 @@ const App = () => {
 
                 <div className="bg-black/50 p-6 rounded-lg border border-[#30363d] text-left font-mono text-xs space-y-2 mb-8">
                   <div className="text-cyan-400 font-bold underline mb-2">系統回報：</div>
-                  <div className="flex justify-between"><span>[狀態]</span> <span className="text-emerald-400">數據已同步至IU8</span></div>
+                  <div className="flex justify-between"><span>[狀態]</span> <span className="text-emerald-400">數據已同步至雲端</span></div>
                   <div className="flex justify-between"><span>[校驗]</span> <span className="text-cyan-400">意向鎖定成功</span></div>
                   <div className="flex justify-between"><span>[路徑]</span> <span className="text-cyan-400">TARGET_SYNC_ACTIVE</span></div>
                   <div className="mt-4 text-gray-500 italic">

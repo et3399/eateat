@@ -1,10 +1,27 @@
+<!DOCTYPE html>
+
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>聚餐數據採集終端</title>
+</head>
+<body>
+<div id="root"></div>
+<!-- 根據您的檔案結構，App.jsx 在根目錄，我們直接引用它（Vite 會處理） -->
+<!-- 或者您可以建立一個 src 資料夾並將 App.jsx 移進去，然後路徑改為 /src/App.jsx -->
+<script type="module">
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
-import './index.css' // 如果您有 CSS 檔案的話
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    React.createElement(React.StrictMode, null, 
+      React.createElement(App, null)
+    )
+  )
+</script>
+
+
+</body>
+</html>

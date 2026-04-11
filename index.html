@@ -5,23 +5,160 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>聚餐數據採集終端</title>
+<!-- 直接引入 Tailwind CSS 確保樣式生效 -->
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://www.google.com/search?q=https://fonts.googleapis.com/css2%3Ffamily%3DJetBrains%2BMono:wght%40400%3B700%26display%3Dswap');
+body {
+background-color: #0d1117;
+font-family: 'JetBrains Mono', monospace;
+}
+</style>
 </head>
 <body>
 <div id="root"></div>
-<!-- 根據您的檔案結構，App.jsx 在根目錄，我們直接引用它（Vite 會處理） -->
-<!-- 或者您可以建立一個 src 資料夾並將 App.jsx 移進去，然後路徑改為 /src/App.jsx -->
+
 <script type="module">
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
+import React, { useState, useEffect } from 'https://www.google.com/search?q=https://esm.sh/react%4018.2.0'
+import ReactDOM from 'https://www.google.com/search?q=https://esm.sh/react-dom%4018.2.0/client'
+// 引入圖標庫
+import { Terminal, Wifi, Loader2, CheckCircle2 } from 'https://www.google.com/search?q=https://esm.sh/lucide-react'
 
-  ReactDOM.createRoot(document.getElementById('root')).render(
-    React.createElement(React.StrictMode, null, 
-      React.createElement(App, null)
+const App = () =&gt; {
+  const [step, setStep] = useState(&#39;form&#39;);
+  const [userName, setUserName] = useState(&#39;&#39;);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() =&gt; {
+    if (step === &#39;uploading&#39;) {
+      const interval = setInterval(() =&gt; {
+        setProgress((prev) =&gt; {
+          if (prev &gt;= 100) {
+            clearInterval(interval);
+            setTimeout(() =&gt; setStep(&#39;success&#39;), 500);
+            return 100;
+          }
+          return prev + 5;
+        });
+      }, 50);
+      return () =&gt; clearInterval(interval);
+    }
+  }, [step]);
+
+  const handleSubmit = (e) =&gt; {
+    e.preventDefault();
+    if (userName.trim()) setStep(&#39;uploading&#39;);
+  };
+
+  const categories = [
+    { label: &#39;麻辣/火鍋&#39;, value: &#39;hotpot&#39; },
+    { label: &#39;精緻涮涮鍋&#39;, value: &#39;shabu&#39; },
+    { label: &#39;日式燒肉&#39;, value: &#39;jp_bbq&#39; },
+    { label: &#39;韓式料理/燒肉&#39;, value: &#39;kr_bbq&#39; },
+    { label: &#39;飯店百匯吃到飽&#39;, value: &#39;buffet&#39; },
+    { label: &#39;居酒屋/串燒&#39;, value: &#39;izakaya&#39; },
+    { label: &#39;非素食不吃&#39;, value: &#39;vegan&#39;, color: &#39;text-emerald-400&#39; },
+    { label: &#39;生食海鮮拒絕&#39;, value: &#39;no_raw&#39;, color: &#39;text-red-400&#39; },
+    { label: &#39;不吃牛&#39;, value: &#39;no_beef&#39;, color: &#39;text-orange-400&#39; }
+  ];
+
+  return React.createElement(&#39;div&#39;, { className: &#39;min-h-screen text-[#c9d1d9] flex items-center justify-center p-4 relative overflow-hidden&#39; },
+    // 背景裝飾
+    React.createElement(&#39;div&#39;, { 
+      className: &#39;absolute inset-0 opacity-10 pointer-events-none&#39;,
+      style: { backgroundImage: &#39;linear-gradient(#30363d 1px, transparent 1px), linear-gradient(90deg, #30363d 1px, transparent 1px)&#39;, backgroundSize: &#39;40px 40px&#39; }
+    }),
+
+    // 主容器
+    React.createElement(&#39;div&#39;, { className: &#39;relative z-10 w-full max-w-2xl bg-[#161b22]/90 backdrop-blur-xl border border-[#30363d] border-t-4 border-t-cyan-400 rounded-xl shadow-2xl&#39; },
+      
+      // 頂部狀態列
+      React.createElement(&#39;div&#39;, { className: &#39;bg-black/40 px-4 py-2 flex justify-between items-center border-b border-[#30363d]&#39; },
+        React.createElement(&#39;div&#39;, { className: &#39;flex space-x-2&#39; },
+          React.createElement(&#39;div&#39;, { className: &#39;w-2 h-2 rounded-full bg-red-500/50&#39; }),
+          React.createElement(&#39;div&#39;, { className: &#39;w-2 h-2 rounded-full bg-yellow-500/50&#39; }),
+          React.createElement(&#39;div&#39;, { className: &#39;w-2 h-2 rounded-full bg-green-500/50&#39; })
+        ),
+        React.createElement(&#39;div&#39;, { className: &#39;text-[10px] text-cyan-500/50 flex items-center gap-2 font-mono&#39; },
+          &#39;ENCRYPTED_LINK_ACTIVE&#39;
+        )
+      ),
+
+      React.createElement(&#39;div&#39;, { className: &#39;p-8&#39; },
+        step === &#39;form&#39; &amp;&amp; React.createElement(&#39;div&#39;, null,
+          React.createElement(&#39;header&#39;, { className: &#39;text-center mb-10&#39; },
+            React.createElement(&#39;h1&#39;, { className: &#39;text-3xl font-black text-white tracking-widest uppercase mb-2&#39; }, &#39;聚餐數據採集終端&#39;),
+            React.createElement(&#39;p&#39;, { className: &#39;text-cyan-600 text-[10px] font-mono tracking-[0.2em]&#39; }, &#39;SECURE PROTOCOL V5.0&#39;)
+          ),
+
+          React.createElement(&#39;form&#39;, { onSubmit: handleSubmit, className: &#39;space-y-8&#39; },
+            React.createElement(&#39;section&#39;, null,
+              React.createElement(&#39;label&#39;, { className: &#39;text-xs font-bold text-cyan-400 mb-4 block uppercase tracking-widest&#39; }, &#39;Phase 00: 身份識別&#39;),
+              React.createElement(&#39;input&#39;, {
+                type: &#39;text&#39;, required: true, value: userName,
+                onChange: (e) =&gt; setUserName(e.target.value),
+                placeholder: &#39;輸入代號...&#39;,
+                className: &#39;w-full bg-black/50 border-2 border-[#30363d] p-4 rounded-lg focus:border-cyan-400 outline-none text-white&#39;
+              })
+            ),
+
+            React.createElement(&#39;section&#39;, null,
+              React.createElement(&#39;label&#39;, { className: &#39;text-xs font-bold text-cyan-400 mb-4 block uppercase tracking-widest&#39; }, &#39;Phase 01: 預算分析&#39;),
+              React.createElement(&#39;div&#39;, { className: &#39;grid grid-cols-2 md:grid-cols-4 gap-2&#39; },
+                [&#39;$300-&#39;, &#39;$600&#39;, &#39;$1000&#39;, &#39;無上限&#39;].map((p) =&gt; 
+                  React.createElement(&#39;label&#39;, { key: p, className: &#39;cursor-pointer&#39; },
+                    React.createElement(&#39;input&#39;, { type: &#39;radio&#39;, name: &#39;budget&#39;, className: &#39;sr-only peer&#39;, defaultChecked: p === &#39;$600&#39; }),
+                    React.createElement(&#39;div&#39;, { className: &#39;p-3 bg-[#30363d]/30 border-2 border-[#30363d] rounded text-center text-sm font-bold peer-checked:border-cyan-400 peer-checked:text-cyan-400 transition-all&#39; }, p)
+                  )
+                )
+              )
+            ),
+
+            React.createElement(&#39;section&#39;, null,
+              React.createElement(&#39;label&#39;, { className: &#39;text-xs font-bold text-cyan-400 mb-4 block uppercase tracking-widest&#39; }, &#39;Phase 02: 衝突過濾清單&#39;),
+              React.createElement(&#39;div&#39;, { className: &#39;grid grid-cols-2 md:grid-cols-3 gap-2&#39; },
+                categories.map((cat) =&gt; 
+                  React.createElement(&#39;label&#39;, { key: cat.value, className: &#39;cursor-pointer&#39; },
+                    React.createElement(&#39;input&#39;, { type: &#39;checkbox&#39;, className: &#39;sr-only peer&#39; }),
+                    React.createElement(&#39;div&#39;, { className: `p-3 h-full flex items-center justify-center bg-[#30363d]/30 border-2 border-[#30363d] rounded text-center text-xs font-bold peer-checked:border-red-500 peer-checked:text-red-400 transition-all ${cat.color || &#39;&#39;}` }, cat.label)
+                  )
+                )
+              )
+            ),
+
+            React.createElement(&#39;button&#39;, { type: &#39;submit&#39;, className: &#39;w-full py-4 border-2 border-cyan-400 text-cyan-400 font-black rounded hover:bg-cyan-400 hover:text-black transition-all tracking-[0.3em]&#39; }, &#39;發送加密數據&#39;)
+          )
+        ),
+
+        step === &#39;uploading&#39; &amp;&amp; React.createElement(&#39;div&#39;, { className: &#39;py-20 text-center&#39; },
+          React.createElement(&#39;div&#39;, { className: &#39;w-12 h-12 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-6&#39; }),
+          React.createElement(&#39;h2&#39;, { className: &#39;text-xl font-black text-white tracking-widest mb-4&#39; }, `數據封裝中... ${progress}%`),
+          React.createElement(&#39;div&#39;, { className: &#39;w-full bg-[#30363d] h-1.5 rounded-full overflow-hidden&#39; },
+            React.createElement(&#39;div&#39;, { className: &#39;h-full bg-cyan-400 transition-all duration-100&#39;, style: { width: `${progress}%` } })
+          )
+        ),
+
+        step === &#39;success&#39; &amp;&amp; React.createElement(&#39;div&#39;, { className: &#39;py-10 text-center&#39; },
+          React.createElement(&#39;div&#39;, { className: &#39;text-5xl mb-6&#39; }, &#39;✅&#39;),
+          React.createElement(&#39;h2&#39;, { className: &#39;text-2xl font-black text-white mb-2 uppercase tracking-widest&#39; }, &#39;Upload Complete&#39;),
+          React.createElement(&#39;p&#39;, { className: &#39;text-gray-500 mb-8 font-mono text-sm&#39; }, `Target ID: ${userName}`),
+          React.createElement(&#39;div&#39;, { className: &#39;bg-black/50 p-6 rounded border border-[#30363d] text-left font-mono text-[10px] space-y-2 opacity-80&#39; },
+            React.createElement(&#39;p&#39;, { className: &#39;text-cyan-400 underline font-bold&#39; }, &#39;SYSTEM REPORT:&#39;),
+            React.createElement(&#39;p&#39;, null, &#39;STATUS: DATA_SYNC_SUCCESS&#39;),
+            React.createElement(&#39;p&#39;, null, &#39;LOCATION: CLOUDFLARE_EDGE_SERVER&#39;)
+          )
+        )
+      )
     )
-  )
-</script>
+  );
+};
 
+ReactDOM.createRoot(document.getElementById(&#39;root&#39;)).render(
+  React.createElement(React.StrictMode, null, React.createElement(App))
+);
+
+
+</script>
 
 </body>
 </html>
